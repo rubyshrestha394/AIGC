@@ -1,22 +1,30 @@
-# inference.py
 import joblib
-import numpy as np
-from scipy.sparse import hstack, csr_matrix
 import os
+from scipy.sparse import csr_matrix, hstack
+import numpy as np
 
 def load_models(model_dir: str = "models"):
     """
-    Load trained models and the TF-IDF vectorizer from disk.
-
-    Returns:
-        tuple: (svm_model, rf_model, xgb_model, vectorizer)
+    Load trained models and the TF-IDF vectorizer from the models directory.
     """
-    ssvm_model  = joblib.load(os.path.join(model_dir, "svm_model.pkl"))
-    rf_model   = joblib.load(os.path.join(model_dir, "rf_model.pkl"))
-    xgb_model  = joblib.load(os.path.join(model_dir, "xgb_model.pkl"))
-    vectorizer = joblib.load(os.path.join(model_dir, "tfidf_vectorizer.pkl"))
-    return svm_model, rf_model, xgb_model, vectorizer
+    print("Loading models from:", model_dir)
+    
+    svm_path = os.path.join(model_dir, "svm_model.pkl")
+    rf_path = os.path.join(model_dir, "rf_model.pkl")
+    xgb_path = os.path.join(model_dir, "xgb_model.pkl")
+    vec_path = os.path.join(model_dir, "tfidf_vectorizer.pkl")
 
+    # Debug prints
+    print("SVM path:", svm_path)
+    print("Exists:", os.path.exists(svm_path))
+
+    # Load models
+    svm_model  = joblib.load(svm_path)
+    rf_model   = joblib.load(rf_path)
+    xgb_model  = joblib.load(xgb_path)
+    vectorizer = joblib.load(vec_path)
+
+    return svm_model, rf_model, xgb_model, vectorizer
 
 def prepare_features(text: str, vectorizer, expected_dim: int):
     """
