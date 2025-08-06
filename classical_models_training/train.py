@@ -1,7 +1,10 @@
+import os
+
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
-from xgboost import XGBClassifier
 from sklearn.model_selection import GridSearchCV
+
+from xgboost import XGBClassifier
 
 def train_svm(X_train, y_train):
     svm = SVC(probability=True, random_state=42)
@@ -13,7 +16,7 @@ def train_svm(X_train, y_train):
 def train_rf(X_train, y_train):
     rf = RandomForestClassifier(random_state=42, class_weight='balanced')
     param_grid = {'n_estimators': [100], 'max_depth': [None]}
-    grid = GridSearchCV(rf, param_grid, scoring='f1', cv=5)
+    grid = GridSearchCV(rf, param_grid, scoring='f1', cv=5, verbose=3, n_jobs=max(os.cpu_count() - 4, 1))
     grid.fit(X_train, y_train)
     return grid.best_estimator_
 
